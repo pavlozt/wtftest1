@@ -1,0 +1,49 @@
+networks:
+  frontend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+services:
+  nginx1:
+    image: nginx:stable-alpine
+    ports:
+      - "8081:80"
+    volumes:
+      - ./nginx1/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      frontend:
+        ipv4_address: 172.28.0.11
+    depends_on:
+      - php
+
+  nginx2:
+    image: nginx:stable-alpine
+    ports:
+      - "8082:80"
+    volumes:
+      - ./nginx2/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      frontend:
+        ipv4_address: 172.28.0.12
+    depends_on:
+      - php
+
+  nginx3:
+    image: nginx:stable-alpine
+    ports:
+      - "8083:80"
+    volumes:
+      - ./nginx3/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      frontend:
+        ipv4_address: 172.28.0.13
+    depends_on:
+      - php
+
+  php:
+    build: ./php
+    networks:
+      frontend:
+        ipv4_address: 172.28.0.5
